@@ -24,9 +24,17 @@
       margin-bottom: 0.5rem;
     }
 
+    h2 {
+      text-align: center;
+      margin-top: 3rem;
+      font-size: 2rem;
+      color: #2c3e50;
+    }
+
     p {
       font-size: 1.2rem;
       color: #555;
+      text-align: center;
     }
 
     .continent-grid {
@@ -34,7 +42,7 @@
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 1.5rem;
       max-width: 900px;
-      margin: 3rem auto;
+      margin: 2rem auto;
       padding: 0 1.5rem;
     }
 
@@ -73,30 +81,32 @@
 <body>
   <header>
     <h1>WWH Travel</h1>
-    <p>Where I've been 🌍</p>
+    <p>Follow my journey across the world</p>
   </header>
 
   <main>
-    <div class="continent-grid">
-      <a class="card" href="#asia">Asia</a>
-      <a class="card" href="#europe">Europe</a>
-      <a class="card" href="#north-america">North America</a>
-      <a class="card" href="#south-america">South America</a>
-      <a class="card" href="#oceania">Australia & Oceania</a>
-    </div>
-  </main>
- <p>Where I want to go ✈️</p>
-  </header>
+    <section>
+      <h2>Where I've Been 🌍</h2>
+      <div class="continent-grid">
+        <a class="card" href="asia.html">Asia</a>
+        <a class="card" href="europe.html">Europe</a>
+        <a class="card" href="north-america.html">North America</a>
+        <a class="card" href="south-america.html">South America</a>
+        <a class="card" href="oceania.html">Australia & Oceania</a>
+      </div>
+    </section>
 
-  <main>
-    <div class="continent-grid">
-      <a class="card" href="#africa">Africa</a>
-
-    </div>
+    <section>
+      <h2>Where I Want to Go ✈️</h2>
+      <div class="continent-grid">
+        <a class="card" href="africa.html">Africa</a>
+        <!-- Add more destinations here as you dream them up! -->
+      </div>
+    </section>
   </main>
+
   <footer>
     © 2025 William Hansen | <a href="mailto:contact@wwh.travel">contact@wwh.travel</a>
   </footer>
 </body>
 </html>
-
