@@ -1,3 +1,5 @@
+# Display a large output containing updated HTML content with "Preview Mode" and "Editor Mode" labels
+html_code = """
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -81,15 +83,24 @@
       margin-top: 1rem;
     }
 
-    #editorStatus {
-      display: none;
+    #editorStatus,
+    #previewStatus {
       font-weight: bold;
-      color: white;
-      background-color: #0072ff;
       padding: 0.5rem 1rem;
       border-radius: 5px;
       margin: 1rem 0;
       width: fit-content;
+      display: none;
+    }
+
+    #editorStatus {
+      color: white;
+      background-color: #0072ff;
+    }
+
+    #previewStatus {
+      color: #333;
+      background-color: #e0e0e0;
     }
 
     #loadingSpinner {
@@ -205,8 +216,6 @@
   </style>
 </head>
 <body>
-
-  <!-- NAV BAR -->
   <nav>
     <a href="index.html">Home</a>
     <div class="dropdown">
@@ -223,15 +232,14 @@
     <a href="suggestions.html">Suggest Something</a>
   </nav>
 
-  <!-- LOADING SPINNER -->
   <div id="loadingSpinner"></div>
 
-  <!-- CONTENT -->
   <div class="spacer"></div>
   <h1>Asia</h1>
   <p>Exploring vibrant cities, ancient temples, and night markets across Asia.</p>
 
   <div id="editorStatus">🛠 Editor Mode Active</div>
+  <div id="previewStatus">👁️ Preview Mode</div>
 
   <h3>Destinations</h3>
   <ul id="destinationList"></ul>
@@ -255,7 +263,6 @@
 
     async function loadDestinations() {
       document.getElementById('loadingSpinner').style.display = 'block';
-
       try {
         const res = await fetch(apiURL);
         const data = await res.json();
@@ -263,11 +270,9 @@
         list.innerHTML = '';
         data.forEach((row, index) => {
           const [city, country, dates, hotels, restaurants, favorites] = row;
-
           const li = document.createElement('li');
           li.classList.add('destination-card');
           if (editorEnabled) li.classList.add('editable');
-
           li.innerHTML = `
             <div style="display: flex; justify-content: space-between; align-items: flex-start;">
               <div>
@@ -281,9 +286,7 @@
                 <button onclick="editEntry(${index})" title="Edit">✏️</button>
                 <button onclick="deleteEntry(${index})" title="Delete">×</button>
               </div>
-            </div>
-          `;
-
+            </div>`;
           list.appendChild(li);
         });
       } catch (err) {
@@ -298,6 +301,7 @@
       if (password === "wwhtravel") {
         document.getElementById("editorForm").style.display = "block";
         document.getElementById("editorStatus").style.display = "inline-block";
+        document.getElementById("previewStatus").style.display = "none";
         editorEnabled = true;
         loadDestinations();
       } else {
@@ -310,13 +314,11 @@
       const data = {};
       fields.forEach(id => data[id] = document.getElementById(id).value.trim());
       data.action = "add";
-
       await fetch(apiURL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams(data).toString()
       });
-
       fields.forEach(id => document.getElementById(id).value = '');
       loadDestinations();
     }
@@ -341,7 +343,6 @@
       }
       newValues.action = 'edit';
       newValues.index = index;
-
       await fetch(apiURL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -362,9 +363,12 @@
 
     window.onload = function () {
       loadDestinations();
-      activateEditor();
+      document.getElementById("previewStatus").style.display = "inline-block";
     };
   </script>
-
 </body>
 </html>
+"""
+
+import IPython.display as display
+display.display(display.HTML(f"<pre>{html_code}</pre>"))
