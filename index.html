@@ -12,9 +12,41 @@
       color: #e0f7fa;
     }
 
+    /* NAV BAR */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 114, 255, 0.8);
+      backdrop-filter: blur(12px);
+      z-index: 999;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    nav a {
+      color: #e0f7fa;
+      text-decoration: none;
+      margin: 0 1.2rem;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: color 0.3s ease;
+      text-shadow: 0 0 5px #42a5f5;
+    }
+
+    nav a:hover {
+      color: #ffffff;
+      text-shadow: 0 0 10px #64b5f6;
+    }
+
+    /* HEADER */
     header {
       text-align: center;
-      padding: 3rem 1rem 2rem;
+      padding: 6rem 1rem 2rem;
       background: linear-gradient(to right, #00c6ff, #0072ff);
       color: white;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
@@ -88,6 +120,11 @@
     }
 
     @media (max-width: 500px) {
+      nav a {
+        margin: 0 0.7rem;
+        font-size: 0.95rem;
+      }
+
       h1 {
         font-size: 2.3rem;
       }
@@ -95,6 +132,17 @@
   </style>
 </head>
 <body>
+
+  <!-- NAV BAR -->
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="asia.html">Asia</a>
+    <a href="europe.html">Europe</a>
+    <a href="africa.html">Africa</a>
+    <a href="suggestions.html">Suggest</a>
+  </nav>
+
+  <!-- HEADER -->
   <header>
     <h1>WWH Travel</h1>
     <p>Follow along and share suggestions</p>
