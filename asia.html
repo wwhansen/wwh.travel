@@ -12,18 +12,120 @@
       padding: 2rem;
       color: #333;
     }
+
     h1 {
       font-size: 2.5rem;
     }
+
     a {
       color: #007acc;
       text-decoration: none;
     }
+
+    /* NAVIGATION BAR */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background-color: #ffffff;
+      display: flex;
+      align-items: center;
+      padding-left: 2rem;
+      gap: 2rem;
+      z-index: 999;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    nav a, .dropdown-button {
+      color: #0072ff;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      position: relative;
+      transition: color 0.3s ease;
+    }
+
+    nav a:hover, .dropdown-button:hover {
+      color: #004ba0;
+    }
+
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background-color: white;
+      min-width: 180px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+      border-radius: 4px;
+      z-index: 1000;
+    }
+
+    .dropdown-content a {
+      color: #0072ff;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+      transition: background 0.2s ease;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #f0f8ff;
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+
+    @media (max-width: 500px) {
+      nav {
+        flex-direction: column;
+        align-items: flex-start;
+        height: auto;
+        padding: 1rem;
+      }
+
+      nav a {
+        margin-bottom: 0.5rem;
+      }
+    }
+
+    .spacer {
+      padding-top: 80px;
+    }
   </style>
 </head>
 <body>
+
+  <!-- NAV BAR -->
+  <nav>
+    <a href="index.html">Home</a>
+    <div class="dropdown">
+      <span class="dropdown-button">Continents ▾</span>
+      <div class="dropdown-content">
+        <a href="asia.html">Asia</a>
+        <a href="europe.html">Europe</a>
+        <a href="north-america.html">North America</a>
+        <a href="south-america.html">South America</a>
+        <a href="oceania.html">Australia & Oceania</a>
+        <a href="africa.html">Africa</a>
+      </div>
+    </div>
+    <a href="suggestions.html">Suggest Something</a>
+  </nav>
+
+  <!-- CONTENT -->
+  <div class="spacer"></div>
   <h1>Asia</h1>
   <p>Exploring vibrant cities, ancient temples, and night markets across Asia.</p>
   <p><a href="index.html">← Back to Home</a></p>
+
 </body>
 </html>
