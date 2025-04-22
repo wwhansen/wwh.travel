@@ -24,17 +24,11 @@
       margin-bottom: 0.5rem;
     }
 
-    h2 {
-      text-align: center;
-      margin-top: 3rem;
-      font-size: 2rem;
-      color: #2c3e50;
-    }
-
-    p {
+    .section-title {
       font-size: 1.2rem;
-      color: #555;
-      text-align: center;
+      font-weight: 600;
+      color: #444;
+      margin: 2rem 1.5rem 0.5rem;
     }
 
     .continent-grid {
@@ -42,7 +36,7 @@
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 1.5rem;
       max-width: 900px;
-      margin: 2rem auto;
+      margin: 1rem auto 2rem;
       padding: 0 1.5rem;
     }
 
@@ -85,24 +79,20 @@
   </header>
 
   <main>
-    <section>
-      <h2>Where I've Been 🌍</h2>
-      <div class="continent-grid">
-        <a class="card" href="asia.html">Asia</a>
-        <a class="card" href="europe.html">Europe</a>
-        <a class="card" href="north-america.html">North America</a>
-        <a class="card" href="south-america.html">South America</a>
-        <a class="card" href="oceania.html">Australia & Oceania</a>
-      </div>
-    </section>
+    <p class="section-title">Where I've been 🌍</p>
+    <div class="continent-grid">
+      <a class="card" href="asia.html">Asia</a>
+      <a class="card" href="europe.html">Europe</a>
+      <a class="card" href="north-america.html">North America</a>
+      <a class="card" href="south-america.html">South America</a>
+      <a class="card" href="oceania.html">Australia & Oceania</a>
+    </div>
 
-    <section>
-      <h2>Where I Want to Go ✈️</h2>
-      <div class="continent-grid">
-        <a class="card" href="africa.html">Africa</a>
-        <!-- Add more destinations here as you dream them up! -->
-      </div>
-    </section>
+    <p class="section-title">Where I want to go ✈️</p>
+    <div class="continent-grid">
+      <a class="card" href="africa.html">Africa</a>
+      <!-- Add more destinations as you dream them up -->
+    </div>
   </main>
 
   <footer>
