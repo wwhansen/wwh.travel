@@ -27,7 +27,7 @@
       padding-left: 0;
     }
 
-    li {
+    li.destination-card {
       list-style: none;
       margin-bottom: 1.5rem;
       background: #ffffff;
@@ -39,27 +39,26 @@
 
     .editor-buttons {
       display: none;
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      gap: 0.5rem;
     }
 
     li.editable .editor-buttons {
       display: flex;
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
     }
 
     .editor-buttons button {
-      background-color: #eee;
+      background: none;
       border: none;
-      padding: 0.25rem 0.5rem;
-      font-size: 0.9rem;
-      border-radius: 4px;
+      font-size: 1.25rem;
+      color: #888;
+      margin-left: 0.25rem;
       cursor: pointer;
     }
 
     .editor-buttons button:hover {
-      background-color: #ddd;
+      color: #e53935;
     }
 
     #editorForm {
@@ -228,19 +227,27 @@
       list.innerHTML = '';
       data.forEach((row, index) => {
         const [city, country, dates, hotels, restaurants, favorites] = row;
+
         const li = document.createElement('li');
+        li.classList.add('destination-card');
+        if (editorEnabled) li.classList.add('editable');
+
         li.innerHTML = `
-          <strong>${city || '—'}, ${country || ''}</strong><br>
-          <em>${dates || ''}</em><br>
-          🏨 ${hotels || ''}<br>
-          🍽️ ${restaurants || ''}<br>
-          💖 ${favorites || ''}
-          <div class="editor-buttons">
-            <button onclick="editEntry(${index})">✏️</button>
-            <button onclick="deleteEntry(${index})">🗑️</button>
+          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div>
+              <h4 style="margin: 0 0 0.3rem;"><strong>${city || '—'}</strong>, ${country || ''}</h4>
+              <p style="margin: 0.25rem 0;"><em>${dates || ''}</em></p>
+              <p style="margin: 0.25rem 0;">🏨 <strong>Hotels:</strong> ${hotels || ''}</p>
+              <p style="margin: 0.25rem 0;">🍽️ <strong>Restaurants:</strong> ${restaurants || ''}</p>
+              <p style="margin: 0.25rem 0;">💖 <strong>Favorites:</strong> ${favorites || ''}</p>
+            </div>
+            <div class="editor-buttons">
+              <button onclick="editEntry(${index})" title="Edit">✏️</button>
+              <button onclick="deleteEntry(${index})" title="Delete">×</button>
+            </div>
           </div>
         `;
-        if (editorEnabled) li.classList.add('editable');
+
         list.appendChild(li);
       });
     }
@@ -287,7 +294,7 @@
       const newValues = {};
       for (const field of inputs) {
         const val = prompt(`Edit ${field.charAt(0).toUpperCase() + field.slice(1)}:`);
-        if (val === null) return; // cancel
+        if (val === null) return;
         newValues[field] = val.trim();
       }
       newValues.action = 'edit';
