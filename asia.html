@@ -2,52 +2,180 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Asia Notes | WWH Travel</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Asia | WWH Travel</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      padding: 2rem;
-      background-color: #f9f9f9;
+      margin: 0;
+      background-color: #f2f2f2;
       color: #333;
     }
 
-    h1 {
-      font-size: 2.25rem;
-      margin-bottom: 1rem;
+    header {
+      background: linear-gradient(to right, #00c6ff, #0072ff);
+      color: white;
+      padding: 2rem 1rem;
+      text-align: center;
     }
 
-    #docText {
-      white-space: pre-wrap;
-      background-color: #ffffff;
-      border: 1px solid #ddd;
+    h1 {
+      margin: 0;
+      font-size: 2.5rem;
+    }
+
+    .section {
+      margin: 2rem auto;
+      max-width: 1000px;
+      padding: 0 1rem;
+    }
+
+    .folder {
+      background: white;
+      border: 1px solid #ccc;
+      margin-bottom: 1rem;
+      padding: 1rem;
       border-radius: 8px;
-      padding: 1.2rem;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-      line-height: 1.6;
+    }
+
+    .folder h2 {
+      margin-top: 0;
+      cursor: pointer;
+      color: #0072ff;
+    }
+
+    .subfolder {
+      margin-left: 1rem;
+      margin-top: 1rem;
+    }
+
+    .recommendation {
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      background-color: #e3f2fd;
+      border-left: 4px solid #0072ff;
+      border-radius: 4px;
+    }
+
+    .upload-box {
+      margin-top: 1rem;
+    }
+
+    input[type="text"], textarea {
+      width: 100%;
+      margin-top: 0.5rem;
+      padding: 0.5rem;
+      border-radius: 4px;
+      border: 1px solid #ccc;
       font-size: 1rem;
-      min-height: 300px;
+    }
+
+    input[type="file"] {
+      margin-top: 0.5rem;
+    }
+
+    button {
+      margin-top: 0.5rem;
+      background-color: #0072ff;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #005ecb;
+    }
+
+    img {
+      max-width: 200px;
+      margin-top: 0.5rem;
+      border-radius: 4px;
     }
   </style>
 </head>
 <body>
-  <h1>Asia Travel Notes</h1>
-  <div id="docText">Loading...</div>
+  <header>
+    <h1>Asia</h1>
+    <p>Browse countries and cities, leave tips, and upload memories</p>
+  </header>
+
+  <div class="section">
+    <!-- COUNTRY FOLDER -->
+    <div class="folder">
+      <h2 onclick="toggleSection('japan')">🇯🇵 Japan</h2>
+      <div id="japan" class="subfolder" style="display:none">
+        <!-- CITY SUBFOLDER -->
+        <div class="folder">
+          <h3>Tokyo</h3>
+          <div class="upload-box">
+            <label for="tokyo-reco">Recommendation:</label>
+            <textarea id="tokyo-reco" rows="3" placeholder="Write your favorite spot, food, or activity..."></textarea>
+            <label for="tokyo-img">Upload Image:</label>
+            <input type="file" id="tokyo-img" accept="image/*" onchange="previewImage(this, 'tokyo-preview')">
+            <div id="tokyo-preview"></div>
+            <button onclick="postRecommendation('tokyo')">Post</button>
+            <div id="tokyo-posts"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COUNTRY FOLDER -->
+    <div class="folder">
+      <h2 onclick="toggleSection('thailand')">🇹🇭 Thailand</h2>
+      <div id="thailand" class="subfolder" style="display:none">
+        <div class="folder">
+          <h3>Bangkok</h3>
+          <div class="upload-box">
+            <label for="bangkok-reco">Recommendation:</label>
+            <textarea id="bangkok-reco" rows="3" placeholder="Share your experience or recommendation..."></textarea>
+            <label for="bangkok-img">Upload Image:</label>
+            <input type="file" id="bangkok-img" accept="image/*" onchange="previewImage(this, 'bangkok-preview')">
+            <div id="bangkok-preview"></div>
+            <button onclick="postRecommendation('bangkok')">Post</button>
+            <div id="bangkok-posts"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add more country/city folders below as needed -->
+  </div>
 
   <script>
-    const apiURL = 'https://script.google.com/macros/s/AKfycbxxE4jxBcqSgANOxEz385gmL_PkO9mgKDu0IFgN2EgtKmi8PR-nv4Q2VTkasUfaBC7O8w/exec';
-
-    async function loadText() {
-      try {
-        const res = await fetch(apiURL);
-        const text = await res.text();
-        document.getElementById('docText').textContent = text;
-      } catch (e) {
-        document.getElementById('docText').textContent = 'Failed to load notes.';
-      }
+    function toggleSection(id) {
+      const el = document.getElementById(id);
+      el.style.display = el.style.display === 'none' ? 'block' : 'none';
     }
 
-    window.onload = loadText;
+    function previewImage(input, containerId) {
+      const file = input.files[0];
+      const reader = new FileReader();
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+      reader.onload = function (e) {
+        const img = document.createElement("img");
+        img.src = e.target.result;
+        container.appendChild(img);
+      };
+      if (file) reader.readAsDataURL(file);
+    }
+
+    function postRecommendation(cityId) {
+      const text = document.getElementById(`${cityId}-reco`).value;
+      const imgContainer = document.getElementById(`${cityId}-preview`);
+      const postsContainer = document.getElementById(`${cityId}-posts`);
+
+      const postDiv = document.createElement('div');
+      postDiv.className = 'recommendation';
+      postDiv.innerHTML = `<p>${text}</p>${imgContainer.innerHTML}`;
+      postsContainer.appendChild(postDiv);
+
+      document.getElementById(`${cityId}-reco`).value = '';
+      imgContainer.innerHTML = '';
+    }
   </script>
 </body>
 </html>
