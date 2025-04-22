@@ -11,38 +11,28 @@
       background-color: #f9f9f9;
       color: #333;
     }
+
     h1 {
       font-size: 2.25rem;
       margin-bottom: 1rem;
     }
-    textarea {
-      width: 100%;
-      height: 300px;
-      font-size: 1rem;
-      padding: 1rem;
+
+    #docText {
+      white-space: pre-wrap;
+      background-color: #ffffff;
+      border: 1px solid #ddd;
       border-radius: 8px;
-      border: 1px solid #ccc;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    }
-    button {
-      margin-top: 1rem;
-      padding: 0.6rem 1.2rem;
-      background-color: #0072ff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
+      padding: 1.2rem;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      line-height: 1.6;
       font-size: 1rem;
-    }
-    button:hover {
-      background-color: #005fcc;
+      min-height: 300px;
     }
   </style>
 </head>
 <body>
   <h1>Asia Travel Notes</h1>
-  <textarea id="docText" placeholder="Loading..."></textarea><br>
-  <button onclick="saveText()">Save</button>
+  <div id="docText">Loading...</div>
 
   <script>
     const apiURL = 'https://script.google.com/macros/s/AKfycbxxE4jxBcqSgANOxEz385gmL_PkO9mgKDu0IFgN2EgtKmi8PR-nv4Q2VTkasUfaBC7O8w/exec';
@@ -51,23 +41,9 @@
       try {
         const res = await fetch(apiURL);
         const text = await res.text();
-        document.getElementById('docText').value = text;
+        document.getElementById('docText').textContent = text;
       } catch (e) {
-        document.getElementById('docText').value = 'Failed to load content.';
-      }
-    }
-
-    async function saveText() {
-      const newText = document.getElementById('docText').value;
-      try {
-        await fetch(apiURL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: new URLSearchParams({ content: newText })
-        });
-        alert("Saved!");
-      } catch (e) {
-        alert("Failed to save.");
+        document.getElementById('docText').textContent = 'Failed to load notes.';
       }
     }
 
