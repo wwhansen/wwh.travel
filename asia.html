@@ -81,6 +81,17 @@
       margin-top: 1rem;
     }
 
+    #editorStatus {
+      display: none;
+      font-weight: bold;
+      color: white;
+      background-color: #0072ff;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      margin: 1rem 0;
+      width: fit-content;
+    }
+
     button {
       padding: 0.5rem 1rem;
       font-size: 1rem;
@@ -198,10 +209,10 @@
   <h1>Asia</h1>
   <p>Exploring vibrant cities, ancient temples, and night markets across Asia.</p>
 
+  <div id="editorStatus">🛠 Editor Mode Active</div>
+
   <h3>Destinations</h3>
   <ul id="destinationList"></ul>
-
-  <button onclick="activateEditor()">Enter Editor Mode</button>
 
   <div id="editorForm">
     <input type="text" id="city" placeholder="City" /><br>
@@ -256,6 +267,7 @@
       const password = prompt("Enter password:");
       if (password === "wwhtravel") {
         document.getElementById("editorForm").style.display = "block";
+        document.getElementById("editorStatus").style.display = "inline-block";
         editorEnabled = true;
         loadDestinations();
       } else {
@@ -318,7 +330,10 @@
       loadDestinations();
     }
 
-    window.onload = loadDestinations;
+    window.onload = function () {
+      loadDestinations();
+      activateEditor(); // ← activate editor mode by default (optional: remove if you want manual trigger)
+    };
   </script>
 
 </body>
