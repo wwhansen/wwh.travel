@@ -22,7 +22,44 @@
       text-decoration: none;
     }
 
-    /* NAVIGATION BAR */
+    ul {
+      margin-top: 1rem;
+    }
+
+    li {
+      margin-bottom: 0.5rem;
+    }
+
+    #editorForm {
+      display: none;
+      margin-top: 2rem;
+      padding: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background-color: #ffffff;
+    }
+
+    input[type="text"] {
+      padding: 0.5rem;
+      width: 60%;
+      font-size: 1rem;
+      margin-right: 0.5rem;
+    }
+
+    button {
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      background-color: #0072ff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #005fcc;
+    }
+
     nav {
       position: fixed;
       top: 0;
@@ -125,7 +162,59 @@
   <div class="spacer"></div>
   <h1>Asia</h1>
   <p>Exploring vibrant cities, ancient temples, and night markets across Asia.</p>
-  <p><a href="index.html">← Back to Home</a></p>
+
+  <h3>Destinations</h3>
+  <ul id="destinationList"></ul>
+
+  <button onclick="activateEditor()">Enter Editor Mode</button>
+
+  <div id="editorForm">
+    <input type="text" id="newDestination" placeholder="Add new destination..." />
+    <button onclick="addDestination()">Add</button>
+  </div>
+
+  <p style="margin-top: 2rem;"><a href="index.html">← Back to Home</a></p>
+
+  <script>
+    const apiURL = 'https://script.google.com/macros/s/AKfycbzDK8dAX6KPtho44lucwgpjG-I2YvvoqCPg-CHMu3EdsfhBIa-MvZjrBDQr44zgXVxRYQ/exec';
+
+    async function loadDestinations() {
+      const res = await fetch(apiURL);
+      const data = await res.json();
+      const list = document.getElementById('destinationList');
+      list.innerHTML = '';
+      data.forEach(destination => {
+        const li = document.createElement('li');
+        li.textContent = destination;
+        list.appendChild(li);
+      });
+    }
+
+    function activateEditor() {
+      const password = prompt("Enter password:");
+      if (password === "wwhtravel") {
+        document.getElementById("editorForm").style.display = "block";
+      } else {
+        alert("Incorrect password.");
+      }
+    }
+
+    async function addDestination() {
+      const input = document.getElementById("newDestination");
+      const value = input.value.trim();
+      if (value) {
+        await fetch(apiURL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: `destination=${encodeURIComponent(value)}`
+        });
+        input.value = '';
+        loadDestinations();
+      }
+    }
+
+    window.onload = loadDestinations;
+  </script>
 
 </body>
 </html>
