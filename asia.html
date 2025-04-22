@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Asia | WWH Travel</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -81,8 +81,7 @@
       margin-top: 1rem;
     }
 
-    #editorStatus,
-    #previewStatus {
+    #editorStatus, #previewStatus {
       font-weight: bold;
       padding: 0.5rem 1rem;
       border-radius: 5px;
@@ -275,8 +274,7 @@
         data.forEach((row, index) => {
           const [city, country, dates, hotels, restaurants, favorites] = row;
           const li = document.createElement('li');
-          li.classList.add('destination-card');
-          if (editorEnabled) li.classList.add('editable');
+          li.className = 'destination-card' + (editorEnabled ? ' editable' : '');
           li.innerHTML = `
             <div style="display: flex; justify-content: space-between; align-items: flex-start;">
               <div>
