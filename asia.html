@@ -12,17 +12,19 @@
       padding: 2rem;
       color: #333;
     }
-    h1 {
-      font-size: 2.5rem;
-    }
+
+    h1 { font-size: 2.5rem; }
+
     a {
       color: #007acc;
       text-decoration: none;
     }
+
     ul {
       margin-top: 1rem;
       padding-left: 0;
     }
+
     li.destination-card {
       list-style: none;
       margin-bottom: 1.5rem;
@@ -32,15 +34,18 @@
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
       position: relative;
     }
+
     .editor-buttons {
       display: none;
     }
+
     li.editable .editor-buttons {
       display: flex;
       position: absolute;
       top: 1rem;
       right: 1rem;
     }
+
     .editor-buttons button {
       background: none;
       border: none;
@@ -49,9 +54,11 @@
       margin-left: 0.25rem;
       cursor: pointer;
     }
+
     .editor-buttons button:hover {
       color: #e53935;
     }
+
     #editorForm {
       display: none;
       margin-top: 2rem;
@@ -60,15 +67,18 @@
       border-radius: 6px;
       background-color: #ffffff;
     }
+
     #editorForm input[type="text"] {
       padding: 0.5rem;
       width: 90%;
       font-size: 1rem;
       margin: 0.3rem 0;
     }
+
     #editorForm button {
       margin-top: 1rem;
     }
+
     #editorStatus, #previewStatus {
       font-weight: bold;
       padding: 0.5rem 1rem;
@@ -77,17 +87,21 @@
       width: fit-content;
       display: none;
     }
+
     #editorStatus {
       color: white;
       background-color: #0072ff;
     }
+
     #previewStatus {
       color: #333;
       background-color: #e0e0e0;
     }
+
     #toggleModeBtn {
       margin-bottom: 1rem;
     }
+
     #loadingSpinner {
       position: fixed;
       top: 50%;
@@ -102,10 +116,12 @@
       z-index: 9999;
       display: none;
     }
+
     @keyframes spin {
       0% { transform: translate(-50%, -50%) rotate(0deg); }
       100% { transform: translate(-50%, -50%) rotate(360deg); }
     }
+
     button {
       padding: 0.5rem 1rem;
       font-size: 1rem;
@@ -115,9 +131,11 @@
       border-radius: 5px;
       cursor: pointer;
     }
+
     button:hover {
       background-color: #005fcc;
     }
+
     nav {
       position: fixed;
       top: 0;
@@ -132,6 +150,7 @@
       z-index: 999;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
     }
+
     nav a, .dropdown-button {
       color: #0072ff;
       text-decoration: none;
@@ -140,13 +159,16 @@
       position: relative;
       transition: color 0.3s ease;
     }
+
     nav a:hover, .dropdown-button:hover {
       color: #004ba0;
     }
+
     .dropdown {
       position: relative;
       display: inline-block;
     }
+
     .dropdown-content {
       display: none;
       position: absolute;
@@ -158,6 +180,7 @@
       border-radius: 4px;
       z-index: 1000;
     }
+
     .dropdown-content a {
       color: #0072ff;
       padding: 12px 16px;
@@ -165,12 +188,15 @@
       display: block;
       transition: background 0.2s ease;
     }
+
     .dropdown-content a:hover {
       background-color: #f0f8ff;
     }
+
     .dropdown:hover .dropdown-content {
       display: block;
     }
+
     @media (max-width: 500px) {
       nav {
         flex-direction: column;
@@ -178,16 +204,173 @@
         height: auto;
         padding: 1rem;
       }
+
       nav a {
         margin-bottom: 0.5rem;
       }
     }
+
     .spacer {
       padding-top: 80px;
     }
   </style>
 </head>
 <body>
-  <!-- Content and Script omitted for brevity -->
+  <nav>
+    <a href="index.html">Home</a>
+    <div class="dropdown">
+      <span class="dropdown-button">Continents ▾</span>
+      <div class="dropdown-content">
+        <a href="asia.html">Asia</a>
+        <a href="europe.html">Europe</a>
+        <a href="north-america.html">North America</a>
+        <a href="south-america.html">South America</a>
+        <a href="oceania.html">Australia & Oceania</a>
+        <a href="africa.html">Africa</a>
+      </div>
+    </div>
+    <a href="suggestions.html">Suggest Something</a>
+  </nav>
+
+  <div id="loadingSpinner"></div>
+
+  <div class="spacer"></div>
+  <h1>Asia</h1>
+  <p>Exploring vibrant cities, ancient temples, and night markets across Asia.</p>
+
+  <div id="editorStatus">🛠 Editor Mode Active</div>
+  <div id="previewStatus">👁️ Preview Mode</div>
+  <button id="toggleModeBtn" onclick="handleToggleClick()">Switch Mode</button>
+
+  <h3>Destinations</h3>
+  <ul id="destinationList"></ul>
+
+  <div id="editorForm">
+    <input type="text" id="city" placeholder="City" /><br>
+    <input type="text" id="country" placeholder="Country" /><br>
+    <input type="text" id="dates" placeholder="Dates" /><br>
+    <input type="text" id="hotels" placeholder="Hotels" /><br>
+    <input type="text" id="restaurants" placeholder="Restaurants" /><br>
+    <input type="text" id="favorites" placeholder="Favorite Things" /><br>
+    <button onclick="addDestination()">Add Destination</button>
+    <button onclick="clearAll()" style="background-color:#e53935; margin-left:10px;">Clear All</button>
+  </div>
+
+  <p style="margin-top: 2rem;"><a href="index.html">← Back to Home</a></p>
+
+  <script>
+    const apiURL = 'https://script.google.com/macros/s/AKfycbzDK8dAX6KPtho44lucwgpjG-I2YvvoqCPg-CHMu3EdsfhBIa-MvZjrBDQr44zgXVxRYQ/exec';
+    let editorEnabled = false;
+
+    async function loadDestinations() {
+      document.getElementById('loadingSpinner').style.display = 'block';
+      try {
+        const res = await fetch(apiURL);
+        const data = await res.json();
+        const list = document.getElementById('destinationList');
+        list.innerHTML = '';
+        data.forEach((row, index) => {
+          const [city, country, dates, hotels, restaurants, favorites] = row;
+          const li = document.createElement('li');
+          li.className = 'destination-card' + (editorEnabled ? ' editable' : '');
+          li.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <div>
+                <h4 style="margin: 0 0 0.3rem;"><strong>${city || '—'}</strong>, ${country || ''}</h4>
+                <p style="margin: 0.25rem 0;"><em>${dates || ''}</em></p>
+                <p style="margin: 0.25rem 0;">🏨 <strong>Hotels:</strong> ${hotels || ''}</p>
+                <p style="margin: 0.25rem 0;">🍽️ <strong>Restaurants:</strong> ${restaurants || ''}</p>
+                <p style="margin: 0.25rem 0;">💖 <strong>Favorites:</strong> ${favorites || ''}</p>
+              </div>
+              <div class="editor-buttons">
+                <button onclick="editEntry(${index})" title="Edit">✏️</button>
+                <button onclick="deleteEntry(${index})" title="Delete">×</button>
+              </div>
+            </div>`;
+          list.appendChild(li);
+        });
+      } catch {
+        alert("Failed to load destinations.");
+      } finally {
+        document.getElementById('loadingSpinner').style.display = 'none';
+      }
+    }
+
+    function handleToggleClick() {
+      if (!editorEnabled) {
+        const pw = prompt("Enter password to enter Editor Mode:");
+        if (pw !== "wwhtravel") return alert("Incorrect password.");
+      }
+      toggleMode();
+    }
+
+    function toggleMode() {
+      editorEnabled = !editorEnabled;
+      document.getElementById("editorForm").style.display = editorEnabled ? "block" : "none";
+      document.getElementById("editorStatus").style.display = editorEnabled ? "inline-block" : "none";
+      document.getElementById("previewStatus").style.display = editorEnabled ? "none" : "inline-block";
+      loadDestinations();
+    }
+
+    async function addDestination() {
+      const fields = ["city", "country", "dates", "hotels", "restaurants", "favorites"];
+      const data = {};
+      fields.forEach(id => data[id] = document.getElementById(id).value.trim());
+      data.action = "add";
+
+      await fetch(apiURL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(data).toString()
+      });
+
+      fields.forEach(id => document.getElementById(id).value = '');
+      loadDestinations();
+    }
+
+    async function deleteEntry(index) {
+      if (!confirm("Delete this destination?")) return;
+      await fetch(apiURL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ action: 'delete', index }).toString()
+      });
+      loadDestinations();
+    }
+
+    async function editEntry(index) {
+      const inputs = ["city", "country", "dates", "hotels", "restaurants", "favorites"];
+      const newValues = {};
+      for (const field of inputs) {
+        const val = prompt(`Edit ${field.charAt(0).toUpperCase() + field.slice(1)}:`)
+        if (val === null) return;
+        newValues[field] = val.trim();
+      }
+      newValues.action = 'edit';
+      newValues.index = index;
+
+      await fetch(apiURL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(newValues).toString()
+      });
+      loadDestinations();
+    }
+
+    async function clearAll() {
+      if (!confirm("This will erase all destinations. Are you sure?")) return;
+      await fetch(apiURL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'action=clear'
+      });
+      loadDestinations();
+    }
+
+    window.onload = function () {
+      loadDestinations();
+      document.getElementById("previewStatus").style.display = "inline-block";
+    };
+  </script>
 </body>
 </html>
