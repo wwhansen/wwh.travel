@@ -92,6 +92,25 @@
       width: fit-content;
     }
 
+    #loadingSpinner {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border: 6px solid #f3f3f3;
+      border-top: 6px solid #0072ff;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      z-index: 9999;
+    }
+
+    @keyframes spin {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
     button {
       padding: 0.5rem 1rem;
       font-size: 1rem;
@@ -204,6 +223,9 @@
     <a href="suggestions.html">Suggest Something</a>
   </nav>
 
+  <!-- LOADING SPINNER -->
+  <div id="loadingSpinner"></div>
+
   <!-- CONTENT -->
   <div class="spacer"></div>
   <h1>Asia</h1>
@@ -232,35 +254,43 @@
     let editorEnabled = false;
 
     async function loadDestinations() {
-      const res = await fetch(apiURL);
-      const data = await res.json();
-      const list = document.getElementById('destinationList');
-      list.innerHTML = '';
-      data.forEach((row, index) => {
-        const [city, country, dates, hotels, restaurants, favorites] = row;
+      document.getElementById('loadingSpinner').style.display = 'block';
 
-        const li = document.createElement('li');
-        li.classList.add('destination-card');
-        if (editorEnabled) li.classList.add('editable');
+      try {
+        const res = await fetch(apiURL);
+        const data = await res.json();
+        const list = document.getElementById('destinationList');
+        list.innerHTML = '';
+        data.forEach((row, index) => {
+          const [city, country, dates, hotels, restaurants, favorites] = row;
 
-        li.innerHTML = `
-          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-            <div>
-              <h4 style="margin: 0 0 0.3rem;"><strong>${city || '—'}</strong>, ${country || ''}</h4>
-              <p style="margin: 0.25rem 0;"><em>${dates || ''}</em></p>
-              <p style="margin: 0.25rem 0;">🏨 <strong>Hotels:</strong> ${hotels || ''}</p>
-              <p style="margin: 0.25rem 0;">🍽️ <strong>Restaurants:</strong> ${restaurants || ''}</p>
-              <p style="margin: 0.25rem 0;">💖 <strong>Favorites:</strong> ${favorites || ''}</p>
+          const li = document.createElement('li');
+          li.classList.add('destination-card');
+          if (editorEnabled) li.classList.add('editable');
+
+          li.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <div>
+                <h4 style="margin: 0 0 0.3rem;"><strong>${city || '—'}</strong>, ${country || ''}</h4>
+                <p style="margin: 0.25rem 0;"><em>${dates || ''}</em></p>
+                <p style="margin: 0.25rem 0;">🏨 <strong>Hotels:</strong> ${hotels || ''}</p>
+                <p style="margin: 0.25rem 0;">🍽️ <strong>Restaurants:</strong> ${restaurants || ''}</p>
+                <p style="margin: 0.25rem 0;">💖 <strong>Favorites:</strong> ${favorites || ''}</p>
+              </div>
+              <div class="editor-buttons">
+                <button onclick="editEntry(${index})" title="Edit">✏️</button>
+                <button onclick="deleteEntry(${index})" title="Delete">×</button>
+              </div>
             </div>
-            <div class="editor-buttons">
-              <button onclick="editEntry(${index})" title="Edit">✏️</button>
-              <button onclick="deleteEntry(${index})" title="Delete">×</button>
-            </div>
-          </div>
-        `;
+          `;
 
-        list.appendChild(li);
-      });
+          list.appendChild(li);
+        });
+      } catch (err) {
+        alert("Failed to load destinations.");
+      } finally {
+        document.getElementById('loadingSpinner').style.display = 'none';
+      }
     }
 
     function activateEditor() {
@@ -305,7 +335,7 @@
       const inputs = ["city", "country", "dates", "hotels", "restaurants", "favorites"];
       const newValues = {};
       for (const field of inputs) {
-        const val = prompt(`Edit ${field.charAt(0).toUpperCase() + field.slice(1)}:`);
+        const val = prompt(`Edit ${field.charAt(0).toUpperCase() + field.slice(1)}:`)
         if (val === null) return;
         newValues[field] = val.trim();
       }
@@ -332,7 +362,7 @@
 
     window.onload = function () {
       loadDestinations();
-      activateEditor(); // ← activate editor mode by default (optional: remove if you want manual trigger)
+      activateEditor();
     };
   </script>
 
