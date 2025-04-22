@@ -210,6 +210,12 @@
     .spacer {
       padding-top: 80px;
     }
+
+    #emptyMessage {
+      margin-top: 1rem;
+      font-style: italic;
+      color: #777;
+    }
   </style>
 </head>
 <body>
@@ -241,6 +247,7 @@
 
   <h3>Destinations</h3>
   <ul id="destinationList"></ul>
+  <p id="emptyMessage" style="display: none;">No destinations yet. Add one to get started!</p>
 
   <div id="editorForm">
     <input type="text" id="city" placeholder="City" /><br>
@@ -265,27 +272,33 @@
         const res = await fetch(apiURL);
         const data = await res.json();
         const list = document.getElementById('destinationList');
+        const emptyMsg = document.getElementById('emptyMessage');
         list.innerHTML = '';
-        data.forEach((row, index) => {
-          const [city, country, dates, hotels, restaurants, favorites] = row;
-          const li = document.createElement('li');
-          li.className = 'destination-card' + (editorEnabled ? ' editable' : '');
-          li.innerHTML = `
-            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-              <div>
-                <h4 style="margin: 0 0 0.3rem;"><strong>${city || '—'}</strong>, ${country || ''}</h4>
-                <p style="margin: 0.25rem 0;"><em>${dates || ''}</em></p>
-                <p style="margin: 0.25rem 0;">🏨 <strong>Hotels:</strong> ${hotels || ''}</p>
-                <p style="margin: 0.25rem 0;">🍽️ <strong>Restaurants:</strong> ${restaurants || ''}</p>
-                <p style="margin: 0.25rem 0;">💖 <strong>Favorites:</strong> ${favorites || ''}</p>
-              </div>
-              <div class="editor-buttons">
-                <button onclick="editEntry(${index})" title="Edit">✏️</button>
-                <button onclick="deleteEntry(${index})" title="Delete">×</button>
-              </div>
-            </div>`;
-          list.appendChild(li);
-        });
+        if (data.length === 0) {
+          emptyMsg.style.display = 'block';
+        } else {
+          emptyMsg.style.display = 'none';
+          data.forEach((row, index) => {
+            const [city, country, dates, hotels, restaurants, favorites] = row;
+            const li = document.createElement('li');
+            li.className = 'destination-card' + (editorEnabled ? ' editable' : '');
+            li.innerHTML = `
+              <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div>
+                  <h4 style="margin: 0 0 0.3rem;"><strong>${city || '—'}</strong>, ${country || ''}</h4>
+                  <p style="margin: 0.25rem 0;"><em>${dates || ''}</em></p>
+                  <p style="margin: 0.25rem 0;">🏨 <strong>Hotels:</strong> ${hotels || ''}</p>
+                  <p style="margin: 0.25rem 0;">🍽️ <strong>Restaurants:</strong> ${restaurants || ''}</p>
+                  <p style="margin: 0.25rem 0;">💖 <strong>Favorites:</strong> ${favorites || ''}</p>
+                </div>
+                <div class="editor-buttons">
+                  <button onclick="editEntry(${index})" title="Edit">✏️</button>
+                  <button onclick="deleteEntry(${index})" title="Delete">×</button>
+                </div>
+              </div>`;
+            list.appendChild(li);
+          });
+        }
       } catch {
         alert("Failed to load destinations.");
       } finally {
