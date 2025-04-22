@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Suggest a Destination | WWH Travel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364);
+      color: #e0f7fa;
+    }
+
+    header {
+      text-align: center;
+      padding: 3rem 1rem 2rem;
+      background: linear-gradient(to right, #00c6ff, #0072ff);
+      color: white;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    h1 {
+      font-size: 2.8rem;
+      margin-bottom: 0.3rem;
+    }
+
+    p {
+      font-size: 1.2rem;
+      color: #e0f7fa;
+      margin-top: 0;
+    }
+
+    main {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+
+    form {
+      background-color: rgba(255, 255, 255, 0.05);
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0, 128, 255, 0.1);
+      backdrop-filter: blur(10px);
+    }
+
+    label {
+      display: block;
+      margin-top: 1rem;
+      margin-bottom: 0.3rem;
+      font-weight: bold;
+      color: #90caf9;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      background-color: #e3f2fd;
+      margin-bottom: 1rem;
+    }
+
+    button {
+      background-color: #0072ff;
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      font-size: 1rem;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #005fcc;
+    }
+
+    .back-link {
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    .back-link a {
+      text-decoration: none;
+      color: #80d8ff;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      font-size: 0.9rem;
+      color: #b0bec5;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Suggest a Destination</h1>
+    <p>Got an idea for where I should go next? Let me know!</p>
+  </header>
+
+  <main>
+    <form id="suggestion-form">
+      <label for="name">Your Name</label>
+      <input type="text" id="name" placeholder="Type your name..." required>
+
+      <label for="email">Your Email</label>
+      <input type="email" id="email" placeholder="Type your email..." required>
+
+      <label for="message">Your Suggestion</label>
+      <textarea id="message" rows="5" placeholder="Type your travel tip or destination idea..." required></textarea>
+
+      <button type="submit">Send Suggestion</button>
+    </form>
+
+    <div class="back-link">
+      <p><a href="index.html">← Back to Home</a></p>
+    </div>
+  </main>
+
+  <footer>
+    © 2025 William Hansen | <a href="mailto:wwh14@georgetown.edu">wwh14@georgetown.edu</a>
+  </footer>
+
+  <script>
+    document.getElementById("suggestion-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const message = document.getElementById("message").value.trim();
+
+      const mailtoLink = `mailto:wwh14@georgetown.edu?subject=Travel Suggestion from ${encodeURIComponent(name)}&body=From: ${encodeURIComponent(name)} (%0A${encodeURIComponent(email)})%0A%0ASuggestion:%0A${encodeURIComponent(message)}`;
+
+      window.location.href = mailtoLink;
+    });
+  </script>
+</body>
+</html>
