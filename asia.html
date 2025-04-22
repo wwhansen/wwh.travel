@@ -34,6 +34,32 @@
       padding: 1rem;
       border-radius: 8px;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      position: relative;
+    }
+
+    .editor-buttons {
+      display: none;
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      gap: 0.5rem;
+    }
+
+    li.editable .editor-buttons {
+      display: flex;
+    }
+
+    .editor-buttons button {
+      background-color: #eee;
+      border: none;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.9rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .editor-buttons button:hover {
+      background-color: #ddd;
     }
 
     #editorForm {
@@ -186,19 +212,21 @@
     <input type="text" id="restaurants" placeholder="Restaurants" /><br>
     <input type="text" id="favorites" placeholder="Favorite Things" /><br>
     <button onclick="addDestination()">Add Destination</button>
+    <button onclick="clearAll()" style="background-color:#e53935; margin-left:10px;">Clear All</button>
   </div>
 
   <p style="margin-top: 2rem;"><a href="index.html">← Back to Home</a></p>
 
   <script>
     const apiURL = 'https://script.google.com/macros/s/AKfycbzDK8dAX6KPtho44lucwgpjG-I2YvvoqCPg-CHMu3EdsfhBIa-MvZjrBDQr44zgXVxRYQ/exec';
+    let editorEnabled = false;
 
     async function loadDestinations() {
       const res = await fetch(apiURL);
       const data = await res.json();
       const list = document.getElementById('destinationList');
       list.innerHTML = '';
-      data.forEach(row => {
+      data.forEach((row, index) => {
         const [city, country, dates, hotels, restaurants, favorites] = row;
         const li = document.createElement('li');
         li.innerHTML = `
@@ -207,7 +235,12 @@
           🏨 ${hotels || ''}<br>
           🍽️ ${restaurants || ''}<br>
           💖 ${favorites || ''}
+          <div class="editor-buttons">
+            <button onclick="editEntry(${index})">✏️</button>
+            <button onclick="deleteEntry(${index})">🗑️</button>
+          </div>
         `;
+        if (editorEnabled) li.classList.add('editable');
         list.appendChild(li);
       });
     }
@@ -216,6 +249,8 @@
       const password = prompt("Enter password:");
       if (password === "wwhtravel") {
         document.getElementById("editorForm").style.display = "block";
+        editorEnabled = true;
+        loadDestinations();
       } else {
         alert("Incorrect password.");
       }
@@ -225,6 +260,7 @@
       const fields = ["city", "country", "dates", "hotels", "restaurants", "favorites"];
       const data = {};
       fields.forEach(id => data[id] = document.getElementById(id).value.trim());
+      data.action = "add";
 
       await fetch(apiURL, {
         method: 'POST',
@@ -233,6 +269,45 @@
       });
 
       fields.forEach(id => document.getElementById(id).value = '');
+      loadDestinations();
+    }
+
+    async function deleteEntry(index) {
+      if (!confirm("Delete this destination?")) return;
+      await fetch(apiURL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ action: 'delete', index }).toString()
+      });
+      loadDestinations();
+    }
+
+    async function editEntry(index) {
+      const inputs = ["city", "country", "dates", "hotels", "restaurants", "favorites"];
+      const newValues = {};
+      for (const field of inputs) {
+        const val = prompt(`Edit ${field.charAt(0).toUpperCase() + field.slice(1)}:`);
+        if (val === null) return; // cancel
+        newValues[field] = val.trim();
+      }
+      newValues.action = 'edit';
+      newValues.index = index;
+
+      await fetch(apiURL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(newValues).toString()
+      });
+      loadDestinations();
+    }
+
+    async function clearAll() {
+      if (!confirm("This will erase all destinations. Are you sure?")) return;
+      await fetch(apiURL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'action=clear'
+      });
       loadDestinations();
     }
 
